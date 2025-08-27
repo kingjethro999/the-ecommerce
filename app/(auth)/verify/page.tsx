@@ -1,12 +1,13 @@
 import React from "react";
 import VerifyPage from "./verify-user";
 
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const redirectParam = searchParams?.redirect_url;
+  const params = await searchParams;
+  const redirectParam = params?.redirect_url;
   const redirectUrl = typeof redirectParam === "string" ? redirectParam : "/";
 
   return (
