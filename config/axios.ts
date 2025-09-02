@@ -1,5 +1,4 @@
 // config/axios.ts
-import { auth } from "@clerk/nextjs/server";
 import axios from "axios";
 
 // Add validation and fallback
@@ -25,14 +24,16 @@ export async function getAuthenticatedApi() {
     throw new Error("API_BASE_URL is not configured");
   }
 
-  const authResult = await auth();
-  const token = await authResult.getToken();
+  let token: string | null = null;
+  if (typeof window !== "undefined") {
+    token = localStorage.getItem("token");
+  }
 
   return axios.create({
     baseURL: `${API_BASE_URL}/api`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
 }

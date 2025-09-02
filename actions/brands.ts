@@ -9,7 +9,6 @@ import {
   BrandsWithCategories,
   NavigationBrand,
 } from "@/types/brands";
-import { auth } from "@clerk/nextjs/server";
 import axios from "axios";
 
 export async function getAllBrands(): Promise<Brand[]> {

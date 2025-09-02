@@ -9,7 +9,6 @@ import {
   DepartmentsWithCategories,
   NavigationDepartment,
 } from "@/types/departments";
-import { auth } from "@clerk/nextjs/server";
 import axios from "axios";
 
 export async function getNavDepartments(): Promise<NavigationDepartment[]> {

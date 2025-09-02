@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Code, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function FixedNavbar({ userId }: { userId: string | null }) {
+  const { user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -86,9 +87,9 @@ export default function FixedNavbar({ userId }: { userId: string | null }) {
         </div>
 
         {/* CTA buttons */}
-        {userId ? (
+        {user ? (
           <div className="hidden md:flex items-center gap-3">
-            <UserButton />
+            <span className="text-sm font-medium">{user.name}</span>
           </div>
         ) : (
           <div className="hidden md:flex items-center gap-3">
@@ -142,9 +143,9 @@ export default function FixedNavbar({ userId }: { userId: string | null }) {
                     );
                   })}
                 </div>
-                {userId ? (
+                {user ? (
                   <div className="py-6 space-y-3">
-                    <UserButton />
+                    <span className="text-sm font-medium">{user.name}</span>
                   </div>
                 ) : (
                   <div className="py-6 space-y-3">

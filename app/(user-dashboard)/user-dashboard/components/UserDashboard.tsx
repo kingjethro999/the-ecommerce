@@ -37,7 +37,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/providers/AuthProvider";
 
 const data = {
   navMain: [
@@ -57,14 +57,11 @@ const data = {
 export function UserSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const { isSignedIn, user, isLoaded } = useUser();
-  // console.log("Primary email=>", user?.primaryEmailAddress?.emailAddress);
-  // console.log("---------------");
-  // console.log("Email addresses=>", user?.emailAddresses[0].emailAddress);
+  const { isAuthenticated, user, loading } = useAuth();
   const userData = {
-    name: user?.fullName || "",
-    email: user?.primaryEmailAddress?.emailAddress || "",
-    avatar: user?.imageUrl || "",
+    name: user?.name || "",
+    email: user?.email || "",
+    avatar: user?.image || "",
   };
 
   return (
@@ -88,7 +85,11 @@ export function UserSidebar({
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        {isLoaded ? <NavUser user={userData} /> : <p>Loading...</p>}
+        {!loading && isAuthenticated ? (
+          <NavUser user={userData} />
+        ) : (
+          <p>Loading...</p>
+        )}
       </SidebarFooter>
     </Sidebar>
   );

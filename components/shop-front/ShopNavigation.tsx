@@ -30,13 +30,13 @@ import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Button } from "@/components/ui/button";
-import { useUser } from "@clerk/nextjs";
 
 import { useQuery } from "@tanstack/react-query";
 import { getNavDepartments } from "@/actions/departments";
 import { useCartStore } from "@/store/useCart";
 import { UserDropdownMenu } from "../UserDropdown";
 import SearchInput from "./SearchInput";
+import { useAuth } from "@/providers/AuthProvider";
 
 // Type definitions
 export interface NavProps {
@@ -78,7 +78,7 @@ function Logo({
           alt="Logo"
           width={178}
           height={72}
-          className="w-28"
+          className="w-10"
         />
       </Link>
     );
@@ -205,11 +205,13 @@ function Cart({ cartCount }: { cartCount: number }) {
 function HomeHeader({ searchQuery, userId }: NavProps) {
   // In a real app, this would come from a store
   const { items } = useCartStore();
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { isAuthenticated, user, loading, logout } = useAuth();
+  const isSignedIn = isAuthenticated;
+  const isLoaded = !loading;
   const userData = {
-    name: user?.fullName || "",
-    email: user?.primaryEmailAddress?.emailAddress || "",
-    avatar: user?.imageUrl || "",
+    name: user?.name ?? "",
+    email: user?.email ?? "",
+    image: user?.image ?? "",
   };
   return (
     <header className="w-full bg-[#204462] text-white fixed top-0 z-40 shadow-sm">
@@ -228,7 +230,7 @@ function HomeHeader({ searchQuery, userId }: NavProps) {
             {/* Right Section */}
             <div className="flex h-5 items-center space-x-4 text-sm">
               <Button variant={"ghost"} asChild>
-                <Link href="/help">
+                <Link href="/help" prefetch={false}>
                   <span className="text-sm h-auto p-0 font-semibold ">
                     Help
                   </span>
@@ -247,15 +249,15 @@ function HomeHeader({ searchQuery, userId }: NavProps) {
                 )} */}
                 {!isSignedIn ? (
                   <div className="flex items-center gap-3">
-                    <Button href="/sign-in" className="" variant="ghost">
-                      Login
+                    <Button className="" variant="ghost" asChild>
+                      <Link href="/sign-in">Login</Link>
                     </Button>
                     <Button
                       variant="outline"
                       className="text-black hover:text-black/70"
-                      href="/sign-up"
+                      asChild
                     >
-                      Signup
+                      <Link href="/sign-up">Signup</Link>
                     </Button>
                   </div>
                 ) : (

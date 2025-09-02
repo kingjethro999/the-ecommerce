@@ -21,6 +21,8 @@ import {
   Monitor,
   Blocks,
   Chrome,
+  Users2,
+  Users,
 } from "lucide-react";
 
 import { NavDocuments } from "@/components/nav-documents";
@@ -37,7 +39,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/providers/AuthProvider";
 
 const data = {
   user: {
@@ -57,6 +59,11 @@ const data = {
       icon: PackageIcon,
     },
     {
+      title: "Users",
+      url: "/dashboard/users",
+      icon: Users2,
+    },
+    {
       title: "Categories",
       url: "/dashboard/categories",
       icon: TagIcon,
@@ -74,19 +81,19 @@ const data = {
 
     {
       title: "Orders",
-      url: "#",
+      url: "/dashboard/orders",
       icon: ShoppingCartIcon,
     },
     {
       title: "Customers",
-      url: "#",
-      icon: UserIcon,
+      url: "/dashboard/customers",
+      icon: Users,
     },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: TrendingUpIcon,
-    },
+    // {
+    //   title: "Analytics",
+    //   url: "#",
+    //   icon: TrendingUpIcon,
+    // },
     {
       title: "Banners",
       url: "/dashboard/banners",
@@ -177,15 +184,14 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { isSignedIn, user, isLoaded } = useUser();
-  // console.log("Primary email=>", user?.primaryEmailAddress?.emailAddress);
-  // console.log("---------------");
-  // console.log("Email addresses=>", user?.emailAddresses[0].emailAddress);
+export function AdminSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuth();
   const userData = {
-    name: user?.fullName || "",
-    email: user?.primaryEmailAddress?.emailAddress || "",
-    avatar: user?.imageUrl || "",
+    name: user?.name || "",
+    email: user?.email || "",
+    avatar: user?.image || "",
   };
 
   return (
@@ -211,7 +217,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        {isLoaded ? <NavUser user={userData} /> : <p>Loading...</p>}
+        {user ? <NavUser user={userData} /> : <p>Loading...</p>}
       </SidebarFooter>
     </Sidebar>
   );

@@ -1,6 +1,6 @@
 "use server";
 
-import { API_BASE_URL } from "@/config/axios";
+import { api, getAuthenticatedApi } from "@/config/axios";
 
 export interface OrderItem {
   id: string;
@@ -18,7 +18,6 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  clerkUserId: string;
   image: string;
 }
 
@@ -36,26 +35,8 @@ export interface OrdersResponse {
   orders: Order[];
 }
 
-export async function fetchOrders(period = "today"): Promise<OrdersResponse> {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/api/orders?period=${period}`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch orders: ${response.statusText}`);
-    }
-
-    const orders: Order[] = await response.json();
-
-    return {
-      orders,
-    };
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    throw new Error("Failed to fetch orders");
-  }
+export async function getOrders() {
+  const authedApi = await getAuthenticatedApi();
+  const res = await authedApi.get("/orders");
+  return res.data;
 }

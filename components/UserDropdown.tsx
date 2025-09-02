@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 import { Bell, LogOut, ShoppingCart, Sparkles, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import { useClerk } from "@clerk/nextjs";
+import { useAuth } from "@/providers/AuthProvider";
 export function UserDropdownMenu({
   user,
 }: {
@@ -23,14 +23,9 @@ export function UserDropdownMenu({
   };
 }) {
   const { name, email, avatar } = user;
-  const { signOut } = useClerk();
+  const { logout } = useAuth();
   const handleLogout = async () => {
-    try {
-      await signOut({ redirectUrl: "/" });
-      // Optionally, redirect after logout
-    } catch (err) {
-      console.error(JSON.stringify(err, null, 2));
-    }
+    logout();
   };
 
   const handleUpgrade = () => {

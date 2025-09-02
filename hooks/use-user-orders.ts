@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { fetchUserOrders } from "@/actions/user-orders";
 
-export function useUserOrders() {
+export function useUserOrders(userId: string) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,8 +16,9 @@ export function useUserOrders() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["user-orders"],
-    queryFn: fetchUserOrders,
+    queryKey: ["user-orders", userId],
+    queryFn: () => fetchUserOrders(userId),
+    enabled: Boolean(userId),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 

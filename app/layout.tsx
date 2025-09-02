@@ -1,5 +1,4 @@
 import { type Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
@@ -8,6 +7,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { QueryProvider } from "@/providers/ReactQueryClient";
 import { Toaster } from "sonner";
 import { ourFileRouter } from "./api/uploadthing/core";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 const manrope = Manrope({
   weight: "400",
@@ -26,16 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <QueryProvider>
-        <html lang="en">
-          <body className={manrope.className}>
+    <QueryProvider>
+      <html lang="en">
+        <body className={manrope.className}>
+          <AuthProvider>
             <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
             <Toaster richColors />
             {children}
-          </body>
-        </html>
-      </QueryProvider>
-    </ClerkProvider>
+          </AuthProvider>
+        </body>
+      </html>
+    </QueryProvider>
   );
 }

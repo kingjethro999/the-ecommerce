@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+// removed Clerk auth
 import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
 

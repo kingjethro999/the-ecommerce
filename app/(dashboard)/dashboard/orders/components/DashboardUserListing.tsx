@@ -156,7 +156,8 @@ export default function DashboardUserListing({
       // Prepare data for export
       const exportData = filteredUsers.map((user) => ({
         ID: user.id,
-        CLERK_ID: user.clerkUserId,
+        // CLERK_ID removed after migration
+        CLERK_ID: "",
         Name: user.name,
         Image: user.image,
         "Created At": format(new Date(user.createdAt), "yyyy-MM-dd HH:mm:ss"),
@@ -238,7 +239,7 @@ export default function DashboardUserListing({
         subtitle={subtitle}
         data={users}
         columns={columns}
-        keyField="clerkUserId"
+        keyField="id"
         isLoading={false}
         onRefresh={() => console.log("refreshing users")}
         actions={{

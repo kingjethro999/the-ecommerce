@@ -8,7 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 
 import { CartItem } from "@/types/cart";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/providers/AuthProvider";
 import { id } from "date-fns/locale";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -23,11 +23,11 @@ const PayForm = ({ cartItems }: { cartItems: CartItem[] }) => {
     (sum, item) => sum + item.quantity * item.price,
     0
   );
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { user } = useAuth();
   const customer = {
-    name: user?.fullName || "",
-    email: user?.primaryEmailAddress?.emailAddress || "",
-    avatar: user?.imageUrl || "",
+    name: user?.name || "",
+    email: user?.email || "",
+    avatar: user?.image || "",
     id: user?.id || "",
   };
   console.log(customer);

@@ -12,7 +12,6 @@ import {
   DashboardProduct,
   BriefItemsObject,
 } from "@/types/item";
-import { auth } from "@clerk/nextjs/server";
 import axios from "axios";
 
 export async function getAllProducts(): Promise<Product[]> {

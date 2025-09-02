@@ -1,7 +1,6 @@
 "use server";
 
 import { API_BASE_URL } from "@/config/axios";
-import { auth } from "@clerk/nextjs/server";
 
 export interface UserOrderItem {
   id: string;
@@ -26,18 +25,12 @@ export interface UserOrder {
     name: string;
     email: string;
     id: string;
-    clerkUserId: string;
     image: string;
   };
 }
 
-export async function fetchUserOrders(): Promise<UserOrder[]> {
-  const { userId } = await auth();
-
-  if (!userId) {
-    throw new Error("User not authenticated");
-  }
-  console.log(userId);
+export async function fetchUserOrders(userId: string): Promise<UserOrder[]> {
+  if (!userId) throw new Error("User not authenticated");
   try {
     const response = await fetch(`${API_BASE_URL}/api/orders/users/${userId}`, {
       cache: "no-store",

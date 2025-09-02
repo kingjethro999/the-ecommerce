@@ -1,20 +1,9 @@
 // lib/actions/user-actions.ts
 "use server";
 
-import { api, API_BASE_URL } from "@/config/axios";
+import { api, API_BASE_URL, getAuthenticatedApi } from "@/config/axios";
 import { Customer, User, UserDetails } from "@/types/user";
 import axios from "axios";
-import { z } from "zod";
-
-const ClerkUserSchema = z.object({
-  clerkUserId: z.string(),
-  email: z.string().email(),
-  firstName: z.string(),
-  lastName: z.string(),
-  name: z.string(),
-  image: z.string(),
-});
-type ClerkUser = z.infer<typeof ClerkUserSchema>;
 
 interface RegistrationResult {
   success: boolean;
@@ -26,26 +15,15 @@ export async function registerUser(
   data: UserDetails
 ): Promise<RegistrationResult> {
   try {
-    // Validate required fields
-    if (!data.clerkUserId || !data.email) {
+    if (!data.email) {
       return {
         success: false,
         error: "Missing required user information",
       };
     }
 
-    // Call your API endpoint
-    const response = await api.post("/users/register", data);
-    // const response = await fetch(`${API_BASE_URL}/api/users/register`, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     clerkUserId: userDetails.clerkUserId,
-    //     email: userDetails.email,
-    //     firstName: userDetails.firstName,
-    //     lastName: userDetails.lastName,
-    //     name: userDetails.name,
-    //   }),
-    // });
+    const authedApi = await getAuthenticatedApi();
+    const response = await authedApi.post("/users/register", data);
     if (response.status !== 200) {
       return {
         success: false,
@@ -61,7 +39,10 @@ export async function registerUser(
     console.error("Server action error:", error);
     return {
       success: false,
-      error: "Failed to register user. Please try again.",
+      error:
+        axios.isAxiosError(error)
+          ? error.response?.data?.error || "Failed to register user."
+          : "Failed to register user. Please try again.",
     };
   }
 }
@@ -69,7 +50,8 @@ export async function registerUser(
 // Get optimized category list
 export async function getUsers(): Promise<User[]> {
   try {
-    const res = await api.get("/users");
+    const authedApi = await getAuthenticatedApi();
+    const res = await authedApi.get("/users");
     return res.data;
   } catch (error) {
     console.log(error);
@@ -81,7 +63,8 @@ export async function getUsers(): Promise<User[]> {
 }
 export async function getCustomers(): Promise<Customer[]> {
   try {
-    const res = await api.get("/customers");
+    const authedApi = await getAuthenticatedApi();
+    const res = await authedApi.get("/customers");
     return res.data;
   } catch (error) {
     console.log(error);
