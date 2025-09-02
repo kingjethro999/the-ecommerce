@@ -35,8 +35,10 @@ export interface OrdersResponse {
   orders: Order[];
 }
 
-export async function getOrders() {
+export async function getOrders(period?: string) {
   const authedApi = await getAuthenticatedApi();
-  const res = await authedApi.get("/orders");
+  const res = await authedApi.get("/orders", {
+    params: { period }
+  });
   return res.data;
 }

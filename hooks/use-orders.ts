@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchOrders, type OrdersResponse } from "@/actions/orders";
+import { getOrders, type OrdersResponse } from "@/actions/orders";
 import { useMemo } from "react";
 
 interface UseOrdersParams {
@@ -17,7 +17,7 @@ export function useOrders(params: UseOrdersParams = {}) {
 
   const query = useQuery<OrdersResponse, Error>({
     queryKey: ["orders", period],
-    queryFn: () => fetchOrders(period),
+    queryFn: () => getOrders(period),
     staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: false,
   });

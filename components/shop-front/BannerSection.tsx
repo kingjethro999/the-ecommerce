@@ -108,7 +108,7 @@ export default function BannerSection() {
   // NOW we can do conditional returns after all hooks are called
   if (isLoading || !banners) {
     return (
-      <div className="w-full bg-gradient-to-br from-slate-50 to-white mt-32">
+      <div className="w-full bg-gradient-to-br from-slate-50 to-white mt-10">
         <BannerSkeleton />
       </div>
     );
@@ -116,7 +116,7 @@ export default function BannerSection() {
 
   if (error) {
     return (
-      <div className="w-full bg-gradient-to-br from-slate-50 to-white mt-32">
+      <div className="w-full bg-gradient-to-br from-slate-50 to-white mt-10">
         <div className="relative w-full h-[200px] md:h-[350px] overflow-hidden flex items-center justify-center">
           <p className="text-gray-500">Failed to load Banners</p>
         </div>
@@ -127,7 +127,7 @@ export default function BannerSection() {
   console.log(banners);
 
   return (
-    <div className="w-full bg-gradient-to-br from-slate-50 to-white mt-32">
+    <div className="w-full bg-gradient-to-br from-slate-50 to-white mt-10">
       <div className="relative w-full h-[200px] md:h-[350px] overflow-hidden">
         {/* Banner Slides */}
         <div className="relative w-full h-full">
