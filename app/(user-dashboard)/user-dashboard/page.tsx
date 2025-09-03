@@ -18,8 +18,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { InvoicePDF, InvoicePDFProps } from "./components/invoice-pdf";
 import { UserOrder } from "@/actions/user-orders";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function UserDashboardPage() {
+  const { user } = useAuth();
   const {
     orders,
     totalItems,
@@ -34,7 +36,7 @@ export default function UserDashboardPage() {
     statusFilter,
     setStatusFilter,
     setCurrentPage,
-  } = useUserOrders();
+  } = useUserOrders(user?.id ?? "");
 
   const getStatusColor = (status: string) => {
     switch (status) {
