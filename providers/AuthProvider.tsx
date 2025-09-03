@@ -14,6 +14,7 @@ type AuthContextValue = {
   user: AuthUser;
   isAuthenticated: boolean;
   token: string | null;
+  loading: boolean;
   login: (payload: { email: string; password: string }) => Promise<boolean>;
   register: (payload: { name: string; email: string; password: string }) => Promise<boolean>;
   logout: () => void;
@@ -24,6 +25,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<AuthUser>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -37,6 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // invalid token format
       }
     }
+    setLoading(false);
   }, []);
 
   const isAuthenticated = Boolean(token && user);
@@ -92,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const value = useMemo<AuthContextValue>(() => ({ user, isAuthenticated, token, login, register, logout }), [user, isAuthenticated, token]);
+  const value = useMemo<AuthContextValue>(() => ({ user, isAuthenticated, token, loading, login, register, logout }), [user, isAuthenticated, token, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
